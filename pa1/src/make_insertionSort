@@ -1,0 +1,2 @@
+g++ insertionSort.cpp parser.cpp util.cpp -std=c++11 -o insertionSort -w
+echo "Finished compiling, output file is insertionSort"
