@@ -2,6 +2,8 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <tuple>
+#include <assert.h>
 #include "parser.h"
 #include "util.h"
 
@@ -11,6 +13,7 @@ int main( int argc, char** argv )
 {	
     AlgParser parser;
     parser.Parse(argv[1]);
+    cout << "Number of words: " << parser.QueryTotalStringCount() << endl;
 
     ofstream outfile;
     outfile.open(argv[2]);
@@ -21,10 +24,9 @@ int main( int argc, char** argv )
 		string_and_id.push_back(make_tuple(parser.QueryString(i), i+1));
 	}
 
-
     // Start timer
-    AlgTimer timer;
-    timer.Begin();
+    // AlgTimer timer;
+    // timer.Begin();
 
     // SORT
     tuple<string, int> key;
@@ -52,8 +54,9 @@ int main( int argc, char** argv )
     // outfile << parser.QueryString(i) << " " << i << endl;
 
     outfile.close();
-	double time = timer.End();
-	cout << "Finished after time: " << time << endl;
-    getchar();
+
+	// double time = timer.End();
+	// cout << "Finished after time: " << time << endl;
+    cout << "DONE!" << endl;
     return 0;
 }

@@ -1,0 +1,2 @@
+g++ -g quickSort.cpp parser.cpp util.cpp -std=c++11 -o quickSort -w
+echo "Finished compiling, output file is quickSort"
