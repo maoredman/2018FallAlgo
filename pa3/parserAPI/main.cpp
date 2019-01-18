@@ -12,6 +12,7 @@
 #include <vector>
 #include <limits>
 #include <sstream>
+#include <unordered_map>
 
 int main(int argc, char **argv)
 {
@@ -38,21 +39,44 @@ int main(int argc, char **argv)
 	cout << "----------------------" << endl;
 
     int num_vertices = parser.gNumHTiles() * parser.gNumVTiles();
+    // NOTE: graph v1
     // initialize cost graph (cost infinity)
-    float** graph = new float*[num_vertices]; // have to use array of pointers to pass by reference
-    for (int i = 0; i < num_vertices; ++i) {
-        graph[i] = new float[num_vertices];
-        for (int j = 0; j < num_vertices; ++j) {
-            graph[i][j] = numeric_limits<float>::max();
-        }
-    }
-    // initialize demand graph (demand 0)
+    // float** graph = new float*[num_vertices]; // have to use array of pointers to pass by reference
+    // for (int i = 0; i < num_vertices; ++i) {
+    //     graph[i] = new float[num_vertices];
+    //     for (int j = 0; j < num_vertices; ++j) {
+    //         graph[i][j] = numeric_limits<float>::max();
+    //     }
+    // }
+    // // initialize demand graph (demand 0)
     int** demand = new int*[num_vertices]; // have to use array of pointers to pass by reference
     for (int i = 0; i < num_vertices; ++i) {
         demand[i] = new int[num_vertices];
         for (int j = 0; j < num_vertices; ++j) {
             demand[i][j] = 0;
         }
+    }
+
+    // // modify edge costs (to 0)
+    // for (int x = 0; x < parser.gNumVTiles(); ++x) {
+    //     for (int y = 0; y < parser.gNumHTiles(); ++y) {
+    //         int curr_V_idx = gridCoordToInt(x, y, parser.gNumVTiles());
+    //         int neighbor_right_idx = gridCoordToInt(x+1, y, parser.gNumVTiles());
+    //         int neighbor_up_idx = gridCoordToInt(x, y+1, parser.gNumVTiles());
+    //         if (x+1 < parser.gNumVTiles()) {
+    //             setEdgeWeight(curr_V_idx, neighbor_right_idx, 0, graph);
+    //         }
+    //         if (y+1 < parser.gNumHTiles()) {
+    //             setEdgeWeight(curr_V_idx, neighbor_up_idx, 0, graph);
+    //         }
+    //     }
+    // }
+
+    // NOTE: graph V2
+    // arr[v_idx] = {v'_idx: v'_edge_cost}
+    unordered_map<int, float>** graph = new unordered_map<int, float>*[num_vertices];
+    for (int i = 0; i < num_vertices; ++i) {
+        graph[i] = new unordered_map<int, float>();
     }
 
     // modify edge costs (to 0)
@@ -69,6 +93,7 @@ int main(int argc, char **argv)
             }
         }
     }
+
 
     // printing graph
     // for (int i = 0; i < num_vertices; ++i) {
@@ -91,16 +116,22 @@ int main(int argc, char **argv)
     // output << "Writing this to a file.\n";
     output.close();
 
-    // free graph memory
-    for(int i = 0; i < parser.gNumHTiles(); ++i) {
-        delete[] graph[i];
-    }
-    delete[] graph;
-
     for(int i = 0; i < parser.gNumHTiles(); ++i) {
         delete[] demand[i];
     }
     delete[] demand;
+
+    // NOTE: v1 free graph memory
+    // for(int i = 0; i < parser.gNumHTiles(); ++i) {
+    //     delete[] graph[i];
+    // }
+    // delete[] graph;
+
+    // NOTE: v2 graph
+    for(int i = 0; i < num_vertices; ++i) {
+        delete graph[i];
+    }
+    delete[] graph;
 
     return 0;
 }
